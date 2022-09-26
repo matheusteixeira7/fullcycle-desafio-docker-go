@@ -1,10 +1,10 @@
-FROM golang:1.16-alpine AS builder
-
-WORKDIR /usr/src/app
+FROM golang:1.17.6-alpine3.14 as base
+WORKDIR /usr/src
 COPY . .
-RUN go build -o file/binary main.go
+ENV CGO_ENABLED=0
+RUN GOOS=linux go build ./main.go
 
 FROM scratch
-
-COPY --from=builder /usr/src/app/file .
-CMD ["./binary"]
+WORKDIR /usr/src
+COPY --from=base /usr/src/main .
+CMD ["/usr/src/main"]
