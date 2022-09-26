@@ -1,10 +1,10 @@
-FROM golang:1.19.1-alpine as builder
-WORKDIR /app
+FROM golang:1.16-alpine AS builder
+
+WORKDIR /usr/src/app
 COPY . .
-RUN go build -o main .
+RUN go build -o file/binary main.go
 
 FROM scratch
-WORKDIR /app
-COPY --from=builder /app .
-EXPOSE 8080
-CMD ["/app/main"]
+
+COPY --from=builder /usr/src/app/file .
+CMD ["./binary"]
